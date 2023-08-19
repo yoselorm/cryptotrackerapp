@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
-
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
+import { UserAuth } from '../context/AuthContext';
 const SavedCoin = () => {
     const [coins, setCoins] = useState([]);
+    const { user } = UserAuth();
+    console.log(user?.email)
+
+
+
+    useEffect(() => {
+        onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+            setCoins(doc.data()?.watchList)
+        })
+    }, [user?.email])
+
+
+    const coinDir = doc(db, 'users', `${user?.email}`)
+    const removeCoin = async (id) => {
+        try {
+            const result = coins.filter((item) => item.id !== id)
+            await updateDoc(coinDir, {
+                watchList: result
+            })
+        } catch (error) {
+            console.log(error.message)
+        }
+    }
+
 
     return (
         <div>
-            {coins.length === 0 ? (<p>You don't have any coins saved. Please save a coin to add it to your watchlist. <Link to='/'>Click here to search coins</Link></p>) : (
+            {coins?.length === 0 ? (<p>You don't have any coins saved. Please save a coin to add it to your watchlist. <Link to='/'>Click here to search coins</Link></p>) : (
                 <table className='w-full border-collapse text-center'>
                     <thead>
                         <tr className='border-b'>
@@ -17,11 +43,11 @@ const SavedCoin = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {coins.map((coin) => (
+                        {coins?.map((coin) => (
                             <tr key={coin.id} className='h-[60px] overflow-hidden'>
                                 <td>{coin?.rank}</td>
                                 <td>
-                                    <Link to={'/coin/${coin.id}'}>
+                                    <Link to={`/coin/${coin.id}`}>
                                         <div className='flex items-center'>
                                             <img src={coin?.image} alt='/' className='w-8 mr-4' />
                                             <div>
@@ -32,7 +58,7 @@ const SavedCoin = () => {
                                     </Link>
                                 </td>
                                 <td className='pl-8'>
-                                    <AiOutlineClose className='cursor-pointer' />
+                                    <AiOutlineClose onClick={() => removeCoin(coin.id)} className='cursor-pointer' />
                                 </td>
                             </tr>
                         ))}

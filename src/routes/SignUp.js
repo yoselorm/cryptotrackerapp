@@ -17,10 +17,9 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('')
-        setModal(true)
-
         try {
             await signUp(email, password)
+            setModal(true)
 
         } catch (error) {
             setError(error.message)
@@ -28,6 +27,7 @@ const SignUp = () => {
         }
 
     }
+
     const handleContinue = (e) => {
         e.preventDefault()
         setModal(false)

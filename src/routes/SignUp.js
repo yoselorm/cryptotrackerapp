@@ -3,6 +3,7 @@ import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { BsFillCheckCircleFill } from 'react-icons/bs'
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth } from '../context/AuthContext';
+import { BeatLoader } from 'react-spinners';
 
 
 const SignUp = () => {
@@ -11,12 +12,15 @@ const SignUp = () => {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [modal, setModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const { signUp } = UserAuth()
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('')
+        setLoading(true);
         try {
             await signUp(email, password)
             setModal(true)
@@ -25,7 +29,9 @@ const SignUp = () => {
             setError(error.message)
             console.log(error.message)
         }
-
+        setEmail('')
+        setPassword('')
+        setLoading(false);
     }
 
     const handleContinue = (e) => {
@@ -43,7 +49,7 @@ const SignUp = () => {
                     <button className='w-[50%] my-2 p-3 bg-button text-btnText rounded-2xl shadow-xl' onClick={handleContinue}>Continue</button>
                 </div>
             </div>) : <div>
-                <div className='max-w-[400px] mx-auto min-h-[600px] px-4 py-20'>
+                <div className='max-w-[400px] mx-auto min-h-[600px] px-4 py-20 relative'>
                     <h1 className='text-2xl font-bold'>Sign Up</h1>
                     {error ? <p className='bg-red-300 p-3 my-2'>{error}</p> : null}
                     <form onSubmit={handleSubmit}>
@@ -68,6 +74,9 @@ const SignUp = () => {
                             </div>
                         </div>
                         <button className='w-full my-2 p-3 bg-button text-btnText rounded-2xl shadow-xl'>Sign Up</button>
+                        {loading ? (<div className="flex justify-center items-center w-full h-full bg-gradient-to-br from-opacity-40 to-opacity-60 backdrop-blur-sm absolute top-0 left-0">
+                            <BeatLoader color="#36d7b7" loading={loading} size={25} />
+                        </div>) : null}
                     </form>
                     <p className='my-4'>Already have an account?<Link to='/signin' className='text-accent'> Sign In</Link></p>
                 </div>

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth, signIn } from '../context/AuthContext';
+import { BeatLoader } from 'react-spinners';
+
 
 const SignIn = () => {
     const { signIn } = UserAuth()
@@ -9,11 +11,14 @@ const SignIn = () => {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
 
 
     const handleSignIn = async (e) => {
         e.preventDefault();
         setError('')
+        setLoading(true);
         try {
             await signIn(email, password)
             navigate('/account')
@@ -21,13 +26,14 @@ const SignIn = () => {
             setError(error.message)
             console.log(error.message)
         }
+        setLoading(false);
     }
 
 
     return (
         <div>
             <div className='max-w-[400px] mx-auto min-h-[600px] px-4 py-20'>
-                <h1 className='text-2xl font-bold'>Sign In</h1>
+                <h1 className='text-2xl font-bold relative'>Sign In</h1>
                 {error ? <p className='bg-red-300 p-3 my-2'>{error}</p> : null}
                 <form onSubmit={handleSignIn}>
                     <div className='my-4'>
@@ -51,6 +57,9 @@ const SignIn = () => {
                         </div>
                     </div>
                     <button className='w-full my-2 p-3 bg-button text-btnText rounded-2xl shadow-xl'>Sign In</button>
+                    {loading ? (<div className="flex justify-center items-center w-full h-full bg-gradient-to-br from-opacity-40 to-opacity-60 backdrop-blur-sm absolute top-0 left-0">
+                        <BeatLoader color="#36d7b7" loading={loading} size={25} />
+                    </div>) : null}
                 </form>
                 <p className='my-4'>Don't have an account?<Link to='/signup' className='text-accent'> Sign up</Link></p>
             </div>

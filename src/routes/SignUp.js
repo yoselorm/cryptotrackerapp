@@ -76,7 +76,7 @@ const SignUp = () => {
                                     value={password}
                                     onChange={(e) => { setPassword(e.target.value) }}
                                     className='w-full p-2 bg-primary border border-input rounded-2xl' type={hidden ? 'password' : 'text'} />
-                                {hidden ? <AiFillLock onClick={handleVisibility} className='absolute right-2 top-3 text-gray-400' /> : <AiFillUnlock onClick={handleVisibility} className='absolute text-green-500 right-2 top-3 ' />}
+                                {hidden ? <AiFillLock size={25} onClick={handleVisibility} className='absolute right-2 top-3 text-gray-400' /> : <AiFillUnlock size={25} onClick={handleVisibility} className='absolute text-green-500 right-2 top-3 ' />}
                             </div>
                         </div>
                         <button className='w-full my-2 p-3 bg-button text-btnText rounded-2xl shadow-xl'>Sign Up</button>

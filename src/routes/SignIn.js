@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiFillLock, AiOutlineMail } from 'react-icons/ai';
+import { AiFillLock, AiFillUnlock, AiOutlineMail } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserAuth, signIn } from '../context/AuthContext';
 import { BeatLoader } from 'react-spinners';
@@ -12,8 +12,12 @@ const SignIn = () => {
     const [error, setError] = useState('')
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [hidden, setHidden] = useState(true)
 
-
+    const handleVisibility = (e) => {
+        e.preventDefault()
+        setHidden(!hidden)
+    }
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -52,8 +56,8 @@ const SignIn = () => {
                             <input
                                 value={password}
                                 onChange={(e) => { setPassword(e.target.value) }}
-                                className='w-full p-2 bg-primary border border-input rounded-2xl' type='password' />
-                            <AiFillLock className='absolute right-2 top-3 text-gray-400' />
+                                className='w-full p-2 bg-primary border border-input rounded-2xl' type={hidden ? 'password' : 'text'} />
+                            {hidden ? <AiFillLock onClick={handleVisibility} className='absolute right-2 top-3 text-gray-400' /> : <AiFillUnlock onClick={handleVisibility} className='absolute text-green-500 right-2 top-3 ' />}
                         </div>
                     </div>
                     <button className='w-full my-2 p-3 bg-button text-btnText rounded-2xl shadow-xl'>Sign In</button>
